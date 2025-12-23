@@ -62,10 +62,11 @@ WHERE x BETWEEN @x0 AND @x1 AND y BETWEEN @y0 AND @y1
 function mapPermissions(permissions: string[] = []) {
 	return {
 		is_admin: permissions.includes('Admin'),
-		is_supaadmin: permissions.includes('SupaAdmin'),
-		is_canvas_mod: permissions.includes('Canvas_Mod'),
-		is_shop_edit: permissions.includes('Shop_Editor'),
-		is_ship_edit: permissions.includes('Shipwright')
+		is_Beta_Tester: permissions.includes('Beta_Tester'),
+		is_supaadmin: permissions.includes('SupaAdmin'), // not needed
+		is_canvas_mod: permissions.includes('Canvas_Mod'), 
+		is_shop_edit: permissions.includes('Shop_Editor'), 
+		is_ship_edit: permissions.includes('Shipwright') // also not needed
 	};
 }
 

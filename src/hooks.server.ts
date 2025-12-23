@@ -1,7 +1,7 @@
 import { SvelteKitAuth } from '@auth/sveltekit';
 import type { User } from '@auth/core/types';
 import { AUTH_SECRET } from '$env/static/private';
-import { addUser } from '$lib/server/db';
+import { addUser, getUserFromEmail } from '$lib/server/db';
 //const allowedEmails: string[] = ['ben.elliott.2021@gmail.com', 'web@niiccoo2.xyz'];
 
 const HackClubProvider = {
@@ -69,6 +69,7 @@ export const { handle } = SvelteKitAuth({
 			session.user.name = token.name as string;
 			session.user.id = token.id as string;
 			session.user.slack_id = token.slack_id as string;
+
 			return session;
 		}
 	}
