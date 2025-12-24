@@ -4,6 +4,7 @@
 	import AdminButton from '$lib/components/AdminButton.svelte';
 	import { redirect } from '@sveltejs/kit';
 	import { goto } from '$app/navigation';
+	import { signIn, signOut } from '@auth/sveltekit/client';
 	export let data: { adminViewer: boolean; signedIn: boolean };
 	const user_is_admin = data.adminViewer; // only for displaying buttons and stuff
 	const signedIn = data.signedIn;
@@ -29,7 +30,7 @@
 					Enter the Bitvault
 				</button></a>
 		{:else}
-			<button on:click={() => signIn('hackclub', { callbackUrl: '/home' })}
+			<button on:click={() => signIn('hackclub', { callbackUrl: '/' })}
 				>Sign in with Hackclub</button>
 		{/if}
 
