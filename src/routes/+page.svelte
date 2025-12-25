@@ -37,5 +37,16 @@
 		<button on:click={() => goto('/shop')}>Shop</button>
 		{#if user_is_admin == true}<AdminButton location="/admin" title="Admin"></AdminButton>{/if}
 	</div>
+
+	<div class="para">
+		<p>
+			pxl is a collaborative art experiment by Hack Club.
+			<br /> <br />
+			Every five minutes of hackatime during the month of January allows you to place one pixel on the
+			canvas. Double-dipping is allowed for just placing pixels, but if you want merch, you can't double
+			dip and need to submit your project to the form in the <a href="/shop">shop</a>.
+		</p>
+	</div>
+
 	<CanvasHolder editable={false} on_homepage={true}></CanvasHolder>
 </div>
