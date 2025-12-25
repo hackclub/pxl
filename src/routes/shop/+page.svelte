@@ -13,44 +13,44 @@
 	const products = [
 		{
 			name: 'Retro Pixel Hat',
-			price: '$15',
+			price: '15 Hours',
 			note: 'Limited Edition',
 			image:
 				'https://www.shutterstock.com/image-vector/pixelated-cowpoke-hat-red-bandana-260nw-2671680181.jpg'
 		},
 		{
 			name: 'Pixel logo',
-			price: '$25',
+			price: '25 Hours',
 			note: 'W Art',
 			image: '/images/pxl-logo.svg'
 		},
 		{
 			name: '8-bit Shield',
-			price: '$20',
+			price: '20 Hours',
 			note: 'Defender of Pixels',
 			image: 'https://via.placeholder.com/150/00fff9/000000?text=Shield'
 		},
 		{
 			name: 'Pixel T-shirt',
-			price: '$67',
+			price: '67 Hours',
 			note: 'is that a 67',
 			image: 'https://via.placeholder.com/150/2802ff/ffffff?text=TShirt'
 		},
 		{
 			name: 'Pixel Sticker Pack',
-			price: '$5',
+			price: '5 Hours',
 			note: 'Collect them all!',
 			image: 'https://via.placeholder.com/150/1cce75/ffffff?text=Stickers'
 		},
 		{
 			name: 'Pixel Backpack',
-			price: '$35',
+			price: '35 Hours',
 			note: 'Carry your pixels',
 			image: 'https://via.placeholder.com/150/356877/ffffff?text=Backpack'
 		},
 		{
 			name: 'Pixel Mug',
-			price: '$12',
+			price: '12 Hours',
 			note: 'Perfect for coffee',
 			image: 'https://via.placeholder.com/150/115352/ffffff?text=Mug'
 		}
@@ -61,7 +61,7 @@
 	<title>Pixel - Shop</title>
 </svelte:head>
 
-<Header home_button={true} canvas_button={true} shop_admin_button={user_is_admin}></Header>
+<Header home_button={true} canvas_button={true}></Header>
 
 <div class="page-content">
 	<div class="shop-wrapper">
@@ -74,7 +74,14 @@
 		{/each}
 	</div>
 	<br />
-	<p>Like what you see?</p>
-	<a href="https://example.com/fillout"><button>Submit a project to get one!</button></a>
+	<div class="para">
+		<p>Like what you see?</p>
+		<p>
+			To get some of this amazing merch, code a project for the number of hours required for the
+			piece of merch you want. You can get more than one item from one project assuming you have
+			enough hours for all the items combined.
+		</p>
+	</div>
+	<a href="https://example.com/fillout"><button>Fillout this Form!</button></a>
 	<br /> <br />
 </div>
