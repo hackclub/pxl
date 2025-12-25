@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { signIn, signOut } from '@auth/sveltekit/client';
-	import pxlTitle from '$lib/assets/pxl-title.png';
+	import Header from '$lib/components/Header.svelte';
+	import CanvasHolder from '$lib/components/CanvasHolder.svelte';
+	import AdminButton from '$lib/components/AdminButton.svelte';
 	import '$lib/assets/styles/home.css';
 	import { goto } from '$app/navigation';
 	export let data: { adminViewer: boolean; signedIn: boolean; isBetaTester: boolean };
@@ -39,7 +41,7 @@
 		</div>
 		<CanvasHolder editable={false} on_homepage={true}></CanvasHolder>
 	</div>
-{:else if !logged_in}<button on:click={() => signIn('hackclub', { callbackUrl: '/' })}
+{:else if !signedIn}<button on:click={() => signIn('hackclub', { callbackUrl: '/' })}
 		>Sign in with Hackclub</button>
 {:else}<p style="color: red;">Get out non-beta SCUM</p>{/if}
 <!-- REMOVE AFTER BETA -->
