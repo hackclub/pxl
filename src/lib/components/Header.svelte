@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { signIn, signOut } from '@auth/sveltekit/client';
+	import { signOut } from '@auth/sveltekit/client';
 	import AdminButton from '$lib/components/AdminButton.svelte';
 	export let message = '';
 	export let welcome_message = false;
@@ -18,8 +18,8 @@
 	<div class="nav-left">
 		{#if message}<h1>{message}</h1>{/if}
 		<!--Custom Message-->
-		{#if welcome_message}<h1>Welcome to pxl!</h1>{/if}
-		{#if home_button}<a href="/"><button>Home</button></a>{/if}
+		{#if welcome_message}<h1>Welcome to Pxl</h1>{/if}
+		{#if home_button}<a href="/home"><button>Home</button></a>{/if}
 		{#if shop_button}<a href="/shop"><button>Shop</button></a>{/if}
 		{#if canvas_button}<a href="/canvas"
 				><button class="canvas-button"
@@ -39,10 +39,9 @@
 	<div class="nav-right">
 		{#if $page.data.session}
 			<span class="account-navbar">Signed in as {$page.data.session.user?.email}</span>
-			<button on:click={() => signOut()}>Sign out</button>
 		{:else}
-			<button on:click={() => signIn('hackclub', { callbackUrl: '/' })}
-				>Sign in with Hackclub</button>
+			<span class="account-navbar">Not signed in</span>
 		{/if}
+		<button on:click={() => signOut()}>Sign out</button>
 	</div>
 </div>

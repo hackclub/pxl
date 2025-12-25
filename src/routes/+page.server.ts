@@ -1,32 +1,20 @@
-import type { PageServerLoad } from './$types';
 import { getUserFromEmail } from '$lib/server/db';
-import { redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ fetch, locals }) => {
+export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth();
+	const logged_in = Boolean(session?.user?.email);
+	var is_Beta_Tester: boolean;
 
-	const email = session?.user?.email;
-
-	let signedIn: boolean = false;
-	let adminViewer: boolean = false;
-
-	if (!email) {
-		// throw redirect(302, '/');
-		signedIn = false;
+	if (session?.user?.email) { // REMOVE AFTER BETA
+		const user = await getUserFromEmail(session.user.email);
+		is_Beta_Tester = user?.is_Beta_Tester ?? false;
 	} else {
-		signedIn = true;
-
-		const user = await getUserFromEmail(email);
-
-		adminViewer = user?.is_admin ?? false;
-
-		const res = await fetch('/api/users/check');
-
-		console.log('id is ' + user?.slack_id);
+		is_Beta_Tester = false;
 	}
 
 	return {
-		adminViewer,
-		signedIn
+		logged_in,
+		is_Beta_Tester // REMOVE AFTER BETA
 	};
 };

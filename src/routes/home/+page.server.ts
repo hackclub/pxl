@@ -1,0 +1,28 @@
+import type { PageServerLoad } from './$types';
+import { getUserFromEmail } from '$lib/server/db';
+import { redirect } from '@sveltejs/kit';
+
+export const load: PageServerLoad = async ({ fetch, locals }) => {
+	const session = await locals.auth();
+
+	const email = session?.user?.email;
+	if (!email) {
+		throw redirect(302, '/');
+	}
+
+	const user = await getUserFromEmail(email);
+
+	if (!user?.is_Beta_Tester) { // REMOVE AFTER BETA
+		throw redirect(302, '/');
+	}
+
+	const admin_viewer = user?.is_admin ?? false;
+
+	const res = await fetch('/api/users/check');
+
+	console.log('id is ' + user?.slack_id);
+
+	return {
+		admin_viewer
+	};
+};
