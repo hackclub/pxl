@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount, onDestroy } from 'svelte';
-	import { page } from '$app/stores';
 
 	const dispatch = createEventDispatcher();
 
@@ -21,6 +20,8 @@
 	type PixelResponse = [Header, Pixel[]];
 
 	// let pixels = [{ x: 1, y: 1, color: 'red' },{ x: 3, y: 1, color: 'blue' },{ x: 100, y: 1, color: 'red' },{ x: 8, y: 6, color: 'blue' }];
+
+	let isPlacing: boolean = false;
 
 	let header: Header | null = null;
 	let pixels: Pixel[] = [];
@@ -235,6 +236,10 @@
 	}
 
 	async function placePixel(e: MouseEvent | PointerEvent) {
+		if (isPlacing) return;
+
+		isPlacing = true;
+
 		const { x, y } = canvasToPixel(e);
 
 		if (x < 0 || y < 0 || x >= width || y >= height) return;
@@ -242,6 +247,32 @@
 		if (editable == false) {
 			return;
 		} // Stop user from placing if the canvas is not editable
+
+		const previousPixel = pixels.find((p) => p.x === x && p.y === y);
+		const previousColor = previousPixel?.color || '#FFFFFF';
+
+		function undoPlace() {
+			const existing = pixels.findIndex((p) => p.x === x && p.y === y);
+			if (existing >= 0) {
+				pixels[existing] = { x, y, color: previousColor };
+				pixels = pixels;
+			} else {
+				pixels = [...pixels, { x, y, color: previousColor }];
+			}
+		}
+
+		// place the pixel right away for fast looking ui
+		// then wait for backend to approve of it, if not approve then undo
+		dispatch('pixelPlaced');
+
+		// Optimistically update local pixels so subsequent redraws include it
+		const existing = pixels.findIndex((p) => p.x === x && p.y === y);
+		if (existing >= 0) {
+			pixels[existing] = { x, y, color: currentColor };
+			pixels = pixels;
+		} else {
+			pixels = [...pixels, { x, y, color: currentColor }];
+		}
 
 		// send request to api to place pixel
 
@@ -252,29 +283,25 @@
 				body: JSON.stringify({
 					x,
 					y,
-					color: currentColor,
-					placed_by: $page.data?.session?.user?.email ?? 'null'
+					color: currentColor
 				})
 			});
 
 			if (!res.ok) {
 				console.error('Unable to place pixel:', await res.text());
+				undoPlace();
 			} else {
-				console.log(`placed pixel at (${x}, ${y})`);
-				dispatch('pixelPlaced');
-
-				// Optimistically update local pixels so subsequent redraws include it
-				const existing = pixels.findIndex((p) => p.x === x && p.y === y);
-				if (existing >= 0) {
-					pixels[existing] = { x, y, color: currentColor };
-					pixels = pixels;
+				if (res.ok != true) {
+					undoPlace();
 				} else {
-					pixels = [...pixels, { x, y, color: currentColor }];
+					console.log(`placed pixel at (${x}, ${y})`);
 				}
 			}
 		} catch (err) {
 			console.error('network error:', err);
 		}
+
+		isPlacing = false;
 	}
 </script>
 
