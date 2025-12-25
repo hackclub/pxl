@@ -37,7 +37,6 @@
 			{/if}
 
 			<button on:click={() => goto('/shop')}>Shop</button>
-			{#if user_is_admin == true}<AdminButton location="/admin" title="Admin"></AdminButton>{/if}
 		</div>
 
 		<div class="para">

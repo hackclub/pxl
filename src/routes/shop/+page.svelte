@@ -61,7 +61,7 @@
 	<title>Pixel - Shop</title>
 </svelte:head>
 
-<Header home_button={true} canvas_button={true} shop_admin_button={user_is_admin}></Header>
+<Header home_button={true} canvas_button={true}></Header>
 
 <div class="page-content">
 	<div class="shop-wrapper">
