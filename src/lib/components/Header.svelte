@@ -18,7 +18,7 @@
 	<div class="nav-left">
 		{#if message}<h1>{message}</h1>{/if}
 		<!--Custom Message-->
-		{#if welcome_message}<h1>Welcome to Pxl</h1>{/if}
+		{#if welcome_message}<h1>Welcome to pxl!</h1>{/if}
 		{#if home_button}<a href="/"><button>Home</button></a>{/if}
 		{#if shop_button}<a href="/shop"><button>Shop</button></a>{/if}
 		{#if canvas_button}<a href="/canvas"
