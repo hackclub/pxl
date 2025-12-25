@@ -68,7 +68,7 @@ export const POST: RequestHandler = async (event) => {
 		return jsonError('Slack ID not found', 400);
 	}
 
-	const totalPixelsPlaced = await numberOfPixels(slack_id);
+	let totalPixelsPlaced = await numberOfPixels(slack_id);
 	const timeStats = await getTotalTime(slack_id);
 	const totalTime = timeStats.total_seconds;
 
@@ -76,7 +76,11 @@ export const POST: RequestHandler = async (event) => {
 	const numberOfPlaceablePixels = Math.max(0, calculatedPixels);
 
 	if (numberOfPlaceablePixels <= 0) {
-		return jsonError('Not enough pixels', 400);
+		// return jsonError('Not enough pixels', 400);
+		return new Response(JSON.stringify({ ok: false, totalPixelsPlaced }), {
+			status: 409,
+			headers: { 'Content-Type': 'application/json' }
+		});
 	}
 
 	try {
@@ -88,9 +92,7 @@ export const POST: RequestHandler = async (event) => {
 			placed_at: Date.now()
 		});
 
-		if (slack_id) {
-			await numberOfPixels(slack_id, true);
-		}
+		totalPixelsPlaced = await numberOfPixels(slack_id, true); // update the airtable with the new place
 
 		broadcast({
 			x,
@@ -101,7 +103,7 @@ export const POST: RequestHandler = async (event) => {
 
 		log_pxl('Placed pixel', x, y, color, session.user.email);
 
-		return new Response(JSON.stringify({ ok: true }), {
+		return new Response(JSON.stringify({ ok: true, totalPixelsPlaced }), {
 			status: 200,
 			headers: { 'Content-Type': 'application/json' }
 		});
