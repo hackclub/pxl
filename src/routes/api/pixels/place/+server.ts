@@ -3,6 +3,7 @@ import { HEIGHT, WIDTH, upsertPixel, numberOfPixels } from '$lib/server/db';
 import { broadcast } from '$lib/server/pixelStream';
 import { log_pxl } from '$lib/server/log';
 import { checkRateLimit } from '$lib/server/ratelimit';
+import { getUserFromEmail } from '$lib/server/db';
 
 const START_DATE: string = '2025-12-10';
 const SEC_PER_PIXEL: number = 300;
@@ -45,6 +46,9 @@ export const POST: RequestHandler = async (event) => {
 		return jsonError('Too many requests, slow down!', 429);
 	}
 
+	const user = await getUserFromEmail(session.user?.email);
+	const isAdmin = user?.is_admin ?? false;
+
 	const { request } = event;
 	const body = (await request.json()) as
 		| {
@@ -73,19 +77,23 @@ export const POST: RequestHandler = async (event) => {
 		return jsonError('Slack ID not found', 400);
 	}
 
-	let totalPixelsPlaced = await numberOfPixels(slack_id);
-	const timeStats = await getTotalTime(slack_id);
-	const totalTime = timeStats.total_seconds;
+	let totalPixelsPlaced: number = 0;
 
-	const calculatedPixels = Math.floor(totalTime / SEC_PER_PIXEL - (totalPixelsPlaced ?? 0));
-	const numberOfPlaceablePixels = Math.max(0, calculatedPixels);
+	if (!isAdmin) {
+		let totalPixelsPlaced = await numberOfPixels(slack_id);
+		const timeStats = await getTotalTime(slack_id);
+		const totalTime = timeStats.total_seconds;
 
-	if (numberOfPlaceablePixels <= 0) {
-		// return jsonError('Not enough pixels', 400);
-		return new Response(JSON.stringify({ ok: false, totalPixelsPlaced }), {
-			status: 409,
-			headers: { 'Content-Type': 'application/json' }
-		});
+		const calculatedPixels = Math.floor(totalTime / SEC_PER_PIXEL - (totalPixelsPlaced ?? 0));
+		const numberOfPlaceablePixels = Math.max(0, calculatedPixels);
+
+		if (numberOfPlaceablePixels <= 0) {
+			// return jsonError('Not enough pixels', 400);
+			return new Response(JSON.stringify({ ok: false, totalPixelsPlaced }), {
+				status: 409,
+				headers: { 'Content-Type': 'application/json' }
+			});
+		}
 	}
 
 	try {
@@ -97,7 +105,7 @@ export const POST: RequestHandler = async (event) => {
 			placed_at: Date.now()
 		});
 
-		totalPixelsPlaced = await numberOfPixels(slack_id, true); // update the airtable with the new place
+		totalPixelsPlaced = (await numberOfPixels(slack_id, true)) ?? 0; // update the airtable with the new place
 
 		broadcast({
 			x,
