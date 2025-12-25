@@ -2,7 +2,7 @@ import type { RequestHandler } from './$types';
 import { HEIGHT, WIDTH, upsertPixel, numberOfPixels } from '$lib/server/db';
 import { broadcast } from '$lib/server/pixelStream';
 import { log_pxl } from '$lib/server/log';
-import { log } from 'console';
+import { checkRateLimit } from '$lib/server/ratelimit';
 
 const START_DATE: string = '2025-12-10';
 const SEC_PER_PIXEL: number = 300;
@@ -38,6 +38,11 @@ export const POST: RequestHandler = async (event) => {
 	// Require login
 	if (!session || !session.user?.email) {
 		return jsonError('Unauthorized', 401);
+	}
+
+	// Allow 5 placements per 10 seconds
+	if (!checkRateLimit(session.user.email, 10, 10000)) {
+		return jsonError('Too many requests, slow down!', 429);
 	}
 
 	const { request } = event;
