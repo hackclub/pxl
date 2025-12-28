@@ -13,44 +13,44 @@
 	const products = [
 		{
 			name: 'Retro Pixel Hat',
-			price: '15 Hours',
+			price: '??? Hours',
 			note: 'Limited Edition',
 			image:
 				'https://www.shutterstock.com/image-vector/pixelated-cowpoke-hat-red-bandana-260nw-2671680181.jpg'
 		},
 		{
 			name: 'Pixel logo',
-			price: '25 Hours',
+			price: '??? Hours',
 			note: 'W Art',
 			image: '/images/pxl-logo.svg'
 		},
 		{
 			name: '8-bit Shield',
-			price: '20 Hours',
+			price: '??? Hours',
 			note: 'Defender of Pixels',
 			image: 'https://via.placeholder.com/150/00fff9/000000?text=Shield'
 		},
 		{
 			name: 'Pixel T-shirt',
-			price: '67 Hours',
+			price: ??? Hours',
 			note: 'is that a 67',
 			image: 'https://via.placeholder.com/150/2802ff/ffffff?text=TShirt'
 		},
 		{
 			name: 'Pixel Sticker Pack',
-			price: '5 Hours',
+			price: '??? Hours',
 			note: 'Collect them all!',
 			image: 'https://via.placeholder.com/150/1cce75/ffffff?text=Stickers'
 		},
 		{
 			name: 'Pixel Backpack',
-			price: '35 Hours',
+			price: '??? Hours',
 			note: 'Carry your pixels',
 			image: 'https://via.placeholder.com/150/356877/ffffff?text=Backpack'
 		},
 		{
 			name: 'Pixel Mug',
-			price: '12 Hours',
+			price: '??? Hours',
 			note: 'Perfect for coffee',
 			image: 'https://via.placeholder.com/150/115352/ffffff?text=Mug'
 		}
