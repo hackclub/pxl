@@ -32,7 +32,7 @@
 		},
 		{
 			name: 'Pixel T-shirt',
-			price: ??? Hours',
+			price: '??? Hours',
 			note: 'is that a 67',
 			image: 'https://via.placeholder.com/150/2802ff/ffffff?text=TShirt'
 		},
