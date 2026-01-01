@@ -1,7 +1,11 @@
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { resolve } from 'path';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { resolve, dirname } from 'path';
 
-const LOG_FILE = resolve(process.cwd(), 'action-log.json');
+const LOG_FILE = resolve(process.cwd(), 'data', 'action-log.json');
+const LOG_DIR = dirname(LOG_FILE);
+if (!existsSync(LOG_DIR)) {
+	mkdirSync(LOG_DIR, { recursive: true });
+}
 
 function readLog(): any[] {
 	if (!existsSync(LOG_FILE)) return [];
