@@ -64,7 +64,22 @@
 <Header home_button={true} canvas_button={true}></Header>
 
 <div class="page-content">
-	<div class="shop-wrapper">
+	<br />
+	<div class="para">
+		<h1>Coming Soon!</h1>
+		<p>
+			The shop will be open soon! Feel free to start working on projects (they can be anything!) to
+			get some merch. Prices will be annonced later, and the items will have the final canvas on
+			them. You can get more than one item from one project assuming you have enough hours for all
+			the items combined.
+
+			<!-- Some of this amazing merch, code a project for the number of hours
+			required for the piece of merch you want. You can get more than one item from one project
+			assuming you have enough hours for all the items combined. -->
+		</p>
+	</div>
+
+	<!-- <div class="shop-wrapper">
 		{#each products as product}
 			<ShopItem
 				name={product.name}
@@ -84,6 +99,6 @@
 
 		<p>Project submission form coming soon!</p>
 	</div>
-	<!-- <a href="https://example.com/fillout"><button>Fillout this Form!</button></a> -->
-	<br /> <br />
+	 <a href="https://example.com/fillout"><button>Fillout this Form!</button></a> -->
+	<!-- <br /> <br /> -->
 </div>
