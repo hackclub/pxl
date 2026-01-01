@@ -64,7 +64,11 @@
 			{/each}
 		</div>
 		<div class="hackatime-info">
-			<p>{numberOfPlaceablePixels} pixels</p>
+			{#if numberOfPlaceablePixels == 1}
+				<p>{numberOfPlaceablePixels} pixel</p>
+			{:else}
+				<p>{numberOfPlaceablePixels} pixels</p>
+			{/if}
 		</div>
 	</div>
 </div>

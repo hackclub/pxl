@@ -3,7 +3,7 @@ import { getUserFromEmail } from '$lib/server/db';
 import { redirect } from '@sveltejs/kit';
 import { numberOfPixels } from '$lib/server/db';
 
-const START_DATE: string = '2025-12-10';
+const START_DATE: string = '2026-01-01';
 
 async function getTotalTime(slackID: string) {
 	try {

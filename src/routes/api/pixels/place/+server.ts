@@ -5,7 +5,7 @@ import { log_pxl } from '$lib/server/log';
 import { checkRateLimit } from '$lib/server/ratelimit';
 import { getUserFromEmail } from '$lib/server/db';
 
-const START_DATE: string = '2025-12-10';
+const START_DATE: string = '2026-01-01';
 const SEC_PER_PIXEL: number = 300;
 
 async function getTotalTime(slackID: string) {
