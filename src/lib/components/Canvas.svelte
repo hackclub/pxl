@@ -187,11 +187,11 @@
 		const scaleX = canvas.width / rect.width;
 		const scaleY = canvas.height / rect.height;
 
-		let x = Math.floor((e.clientX - rect.left) * scaleX);
-		let y = Math.floor((e.clientY - rect.top) * scaleY);
+		let x = (e.clientX - rect.left) * scaleX;
+		let y = (e.clientY - rect.top) * scaleY;
 
-		x = Math.round(x / safePixelSize);
-		y = Math.round(y / safePixelSize);
+		x = Math.floor(x / safePixelSize);
+		y = Math.floor(y / safePixelSize);
 
 		console.log(`Found x and y: (${x}, ${y})`);
 
