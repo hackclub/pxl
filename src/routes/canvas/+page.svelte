@@ -13,7 +13,7 @@
 	let currentColor: string = '#FF0000';
 	let numberOfPlaceablePixels: number = 0;
 
-	console.log('totalPixelsPlaced', data.totalPixelsPlaced);
+	// console.log('totalPixelsPlaced', data.totalPixelsPlaced);
 
 	$: totalPixelsPlaced = data.totalPixelsPlaced || 0;
 	$: totalTime = data.totalTime || 0;

@@ -1,9 +1,15 @@
 import type { RequestHandler } from './$types';
-import { HEIGHT, WIDTH, upsertPixel, numberOfPixels } from '$lib/server/db';
+import {
+	HEIGHT,
+	WIDTH,
+	upsertPixel,
+	numberOfPixels,
+	getUserFromEmail,
+	getPixel
+} from '$lib/server/db';
 import { broadcast } from '$lib/server/pixelStream';
 import { log_pxl } from '$lib/server/log';
 import { checkRateLimit } from '$lib/server/ratelimit';
-import { getUserFromEmail } from '$lib/server/db';
 
 const START_DATE: string = '2026-01-01';
 const SEC_PER_PIXEL: number = 300;
@@ -94,6 +100,15 @@ export const POST: RequestHandler = async (event) => {
 				headers: { 'Content-Type': 'application/json' }
 			});
 		}
+	}
+
+	// Check if the pixel already has the same color
+	const existingPixel = getPixel.get(x, y); // Fetches the pixel at (x, y)
+	if (existingPixel?.color === color) {
+		return new Response(JSON.stringify({ ok: false, reason: 'Pixel already has this color' }), {
+			status: 200,
+			headers: { 'Content-Type': 'application/json' }
+		});
 	}
 
 	try {

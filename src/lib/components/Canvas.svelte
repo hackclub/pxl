@@ -265,7 +265,6 @@
 
 		// place the pixel right away for fast looking ui
 		// then wait for backend to approve of it, if not approve then undo
-		dispatch('pixelPlaced');
 
 		// Optimistically update local pixels so subsequent redraws include it
 		const existing = pixels.findIndex((p) => p.x === x && p.y === y);
@@ -296,11 +295,18 @@
 				console.log('Response body:', responseBody);
 			}
 
-			if (!res.ok) {
-				console.error('Unable to place pixel:', responseBody);
-				undoPlace();
+			if (res.ok) {
+				const responseJson = JSON.parse(responseBody);
+				if (responseJson.ok) {
+					console.log(`placed pixel at (${x}, ${y})`);
+					dispatch('pixelPlaced');
+				} else {
+					console.log('Server responded with ok: false');
+					undoPlace();
+				}
 			} else {
-				console.log(`placed pixel at (${x}, ${y})`);
+				console.log('res.ok returned false');
+				undoPlace();
 			}
 		} catch (err) {
 			console.error('network error:', err);
