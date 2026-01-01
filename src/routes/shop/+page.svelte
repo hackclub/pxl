@@ -58,7 +58,7 @@
 </script>
 
 <svelte:head>
-	<title>Pixel - Shop</title>
+	<title>pxl - Shop</title>
 </svelte:head>
 
 <Header home_button={true} canvas_button={true}></Header>

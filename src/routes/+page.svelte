@@ -12,7 +12,7 @@
 </script>
 
 <svelte:head>
-	<title>Pixel</title>
+	<title>pxl</title>
 </svelte:head>
 
 <Header welcome_message={true}></Header>

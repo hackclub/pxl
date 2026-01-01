@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-	<title>Pixel - Bitvualt</title>
+	<title>pxl - Bitvualt</title>
 </svelte:head>
 
 <Header home_button={true} canvas_button={true} canvas_mod={user_is_admin}></Header>

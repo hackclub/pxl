@@ -42,7 +42,7 @@
 </script>
 
 <svelte:head>
-	<title>Pixel - Canvas</title>
+	<title>pxl - Canvas</title>
 </svelte:head>
 
 <Header home_button={true} shop_button={true} is_canvas={true}></Header>

@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-	<title>Pixel</title>
+	<title>pxl</title>
 </svelte:head>
 
 <div class="home-wrapper">
