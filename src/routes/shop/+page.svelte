@@ -81,7 +81,9 @@
 			piece of merch you want. You can get more than one item from one project assuming you have
 			enough hours for all the items combined.
 		</p>
+
+		<p>Project submission form coming soon!</p>
 	</div>
-	<a href="https://example.com/fillout"><button>Fillout this Form!</button></a>
+	<!-- <a href="https://example.com/fillout"><button>Fillout this Form!</button></a> -->
 	<br /> <br />
 </div>
