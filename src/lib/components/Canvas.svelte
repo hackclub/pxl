@@ -5,6 +5,8 @@
 
 	export let editable = true;
 
+	const DEBUG: boolean = true;
+
 	type Pixel = {
 		x: number;
 		y: number;
@@ -286,6 +288,11 @@
 					color: currentColor
 				})
 			});
+
+			if (DEBUG) {
+				console.log('Response status:', res.status);
+				console.log('Response body:', await res.text());
+			}
 
 			if (!res.ok) {
 				console.error('Unable to place pixel:', await res.text());
