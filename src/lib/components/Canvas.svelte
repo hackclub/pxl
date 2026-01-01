@@ -289,20 +289,18 @@
 				})
 			});
 
+			let responseBody = await res.text(); // Consume the body once and store it
+
 			if (DEBUG) {
 				console.log('Response status:', res.status);
-				console.log('Response body:', await res.text());
+				console.log('Response body:', responseBody);
 			}
 
 			if (!res.ok) {
-				console.error('Unable to place pixel:', await res.text());
+				console.error('Unable to place pixel:', responseBody);
 				undoPlace();
 			} else {
-				if (res.ok != true) {
-					undoPlace();
-				} else {
-					console.log(`placed pixel at (${x}, ${y})`);
-				}
+				console.log(`placed pixel at (${x}, ${y})`);
 			}
 		} catch (err) {
 			console.error('network error:', err);
