@@ -48,6 +48,8 @@
 	const height = 512; // total grid height
 
 	export let pixelSize: number = 5;
+	const pixelSizeConstant: number = 5;
+	let zoom: number = 1;
 
 	// guard value used for sizing/drawing so we never use NaN/Infinity/<=0
 	$: safePixelSize = Number.isFinite(pixelSize) && pixelSize > 0 ? pixelSize : 5;
@@ -237,6 +239,50 @@
 		isPanning = false;
 	}
 
+	function onWheel(event: WheelEvent) {
+		event.preventDefault();
+
+		if (!canvas) return;
+
+		const rect = canvas.getBoundingClientRect();
+
+		// Get the mouse position in screen coordinates
+		const mouseScreenX = event.clientX;
+		const mouseScreenY = event.clientY;
+
+		// Calculate mouse position relative to the canvas content (accounting for transform)
+		// rect already includes the CSS transform, so we get position relative to transformed canvas
+		const mouseCanvasX = mouseScreenX - rect.left;
+		const mouseCanvasY = mouseScreenY - rect.top;
+
+		// Calculate the world position at the mouse before zoom
+		// Don't subtract offsetX/Y here because rect.left/top already account for the transform
+		const worldX = mouseCanvasX / safePixelSize;
+		const worldY = mouseCanvasY / safePixelSize;
+
+		const oldPixelSize = safePixelSize;
+
+		// Update zoom
+		zoom = zoom + 0.001 * -event.deltaY;
+		zoom = Math.max(0.2, Math.min(6, zoom));
+
+		// Update pixelSize
+		const computed = pixelSizeConstant * zoom;
+		pixelSize = Number.isFinite(computed)
+			? Math.max(1, Number(computed.toFixed(8)))
+			: pixelSizeConstant;
+
+		// Adjust offsets to keep the world position under the mouse
+		// The change in offset is the difference in how far the world point moved
+		const deltaOffset = worldX * (pixelSize - oldPixelSize);
+		offsetX -= deltaOffset;
+
+		const deltaOffsetY = worldY * (pixelSize - oldPixelSize);
+		offsetY -= deltaOffsetY;
+
+		console.log('New zoom:', zoom, 'pixelSize:', pixelSize);
+	}
+
 	async function placePixel(e: MouseEvent | PointerEvent) {
 		if (isPlacing) return;
 
@@ -325,6 +371,7 @@
 			on:mousedown={onMouseDown}
 			on:mousemove={onMouseMove}
 			on:mouseup={onMouseUp}
+			on:wheel={onWheel}
 			style="image-rendering: pixelated;
           	width: {width * safePixelSize}px;
           	height: {height * safePixelSize}px;
