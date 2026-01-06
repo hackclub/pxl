@@ -5,7 +5,7 @@
 
 	export let data: PageData;
 
-	const SEC_PER_PIXEL: number = 300; // 5 min
+	const SEC_PER_PIXEL: number = 60; // 300s = 5 min
 	// should prob have an api that this reads from
 
 	const DEBUG: boolean = true;

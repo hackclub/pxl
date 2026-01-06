@@ -12,7 +12,7 @@ import { log_pxl } from '$lib/server/log';
 import { checkRateLimit } from '$lib/server/ratelimit';
 
 const START_DATE: string = '2026-01-01';
-const SEC_PER_PIXEL: number = 300;
+const SEC_PER_PIXEL: number = 60;
 
 async function getTotalTime(slackID: string) {
 	try {
