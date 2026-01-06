@@ -218,15 +218,13 @@
 	function canvasToPixel(e: MouseEvent | PointerEvent) {
 		const rect = canvas.getBoundingClientRect();
 
-		// scale from CSS size → internal canvas size
-		const scaleX = canvas.width / rect.width;
-		const scaleY = canvas.height / rect.height;
+		// Get mouse position relative to canvas viewport
+		const mouseX = e.clientX - rect.left;
+		const mouseY = e.clientY - rect.top;
 
-		let x = (e.clientX - rect.left) * scaleX;
-		let y = (e.clientY - rect.top) * scaleY;
-
-		x = Math.floor(x / safePixelSize);
-		y = Math.floor(y / safePixelSize);
+		// Convert to world coordinates by accounting for offset
+		const x = Math.floor((mouseX - offsetX) / safePixelSize);
+		const y = Math.floor((mouseY - offsetY) / safePixelSize);
 
 		console.log(`Found x and y: (${x}, ${y})`);
 
