@@ -47,23 +47,30 @@ export const { handle } = SvelteKitAuth({
 					const id = profile?.identity?.id;
 					const slack_id = profile?.identity?.slack_id;
 
-					if (!email || !slack_id) {
-						throw new Error('Hack Club returned incomplete user data. Slack ID may be missing.');
+					if (!email || !slack_id || !name || !id) {
+						token.invalid = true;
+						console.warn('Incomplete Hack Club User: ', profile);
+						return token;
 					}
 
 					token.email = email;
-					token.name = name!;
-					token.id = id!;
+					token.name = name;
+					token.id = id;
 					token.slack_id = slack_id;
 
 					await addUser({ email, slack_id, name });
 				} catch (err) {
 					console.error('Error fetching Hack Club profile:', err);
+					token.invalid = true;
 				}
 			}
 			return token;
 		},
 		async session({ session, token }) {
+			if (token.invalid) {
+				return session;
+			}
+
 			session.user = session.user ?? {};
 			session.user.email = token.email as string;
 			session.user.name = token.name as string;
