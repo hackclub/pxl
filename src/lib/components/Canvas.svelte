@@ -78,30 +78,63 @@
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
 
-		// ensure internal buffer matches current pixel size
-		canvas.width = Math.max(1, width * safePixelSize);
-		canvas.height = Math.max(1, height * safePixelSize);
+		// Get viewport dimensions
+		const rect = canvas.getBoundingClientRect();
 
-		// clear/background using internal resolution
+		// Set canvas internal resolution to match CSS size for crisp rendering
+		const dpr = window.devicePixelRatio || 1;
+		canvas.width = rect.width * dpr;
+		canvas.height = rect.height * dpr;
+		ctx.scale(dpr, dpr);
+
+		// clear/background (gray for areas outside the canvas)
+		ctx.fillStyle = '#e0e0e0';
+		ctx.fillRect(0, 0, rect.width, rect.height);
+
+		// Draw the actual canvas area (white background)
+		const canvasScreenX = offsetX;
+		const canvasScreenY = offsetY;
+		const canvasScreenWidth = width * safePixelSize;
+		const canvasScreenHeight = height * safePixelSize;
+
 		ctx.fillStyle = 'white';
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		ctx.fillRect(canvasScreenX, canvasScreenY, canvasScreenWidth, canvasScreenHeight);
 
-		// compute visible grid bounds from canvas dimensions and pixel size
-		const viewLeft = 0;
-		const viewTop = 0;
-		const viewRight = Math.ceil(canvas.width / safePixelSize);
-		const viewBottom = Math.ceil(canvas.height / safePixelSize);
+		// Draw border around canvas
+		ctx.strokeStyle = '#333';
+		ctx.lineWidth = 2;
+		ctx.strokeRect(canvasScreenX, canvasScreenY, canvasScreenWidth, canvasScreenHeight);
 
-		// clamp to world bounds
-		const minX = Math.max(0, viewLeft);
-		const minY = Math.max(0, viewTop);
-		const maxX = Math.min(width - 1, viewRight);
-		const maxY = Math.min(height - 1, viewBottom);
+		// Calculate which grid cells are visible
+		const viewLeft = -offsetX / safePixelSize;
+		const viewTop = -offsetY / safePixelSize;
+		const viewRight = (rect.width - offsetX) / safePixelSize;
+		const viewBottom = (rect.height - offsetY) / safePixelSize;
+
+		// clamp to world bounds with buffer
+		const minX = Math.max(0, Math.floor(viewLeft) - 1);
+		const minY = Math.max(0, Math.floor(viewTop) - 1);
+		const maxX = Math.min(width - 1, Math.ceil(viewRight) + 1);
+		const maxY = Math.min(height - 1, Math.ceil(viewBottom) + 1);
 
 		// draw only pixels inside the visible rect
+		let drawnCount = 0;
 		for (const { x, y, color } of pixels) {
 			if (x < minX || x > maxX || y < minY || y > maxY) continue;
-			drawPixel(ctx, x, y, color);
+
+			// Draw at screen coordinates (offset + world position * pixel size)
+			const screenX = offsetX + x * safePixelSize;
+			const screenY = offsetY + y * safePixelSize;
+
+			ctx.fillStyle = color;
+			ctx.fillRect(screenX, screenY, Math.max(1, safePixelSize), Math.max(1, safePixelSize));
+			drawnCount++;
+		}
+
+		if (DEBUG) {
+			console.log(
+				`Drew ${drawnCount} of ${pixels.length} pixels (visible: ${minX},${minY} to ${maxX},${maxY})`
+			);
 		}
 	}
 
@@ -246,19 +279,13 @@
 
 		const rect = canvas.getBoundingClientRect();
 
-		// Get the mouse position in screen coordinates
-		const mouseScreenX = event.clientX;
-		const mouseScreenY = event.clientY;
-
-		// Calculate mouse position relative to the canvas content (accounting for transform)
-		// rect already includes the CSS transform, so we get position relative to transformed canvas
-		const mouseCanvasX = mouseScreenX - rect.left;
-		const mouseCanvasY = mouseScreenY - rect.top;
+		// Get mouse position relative to canvas viewport
+		const mouseX = event.clientX - rect.left;
+		const mouseY = event.clientY - rect.top;
 
 		// Calculate the world position at the mouse before zoom
-		// Don't subtract offsetX/Y here because rect.left/top already account for the transform
-		const worldX = mouseCanvasX / safePixelSize;
-		const worldY = mouseCanvasY / safePixelSize;
+		const worldX = (mouseX - offsetX) / safePixelSize;
+		const worldY = (mouseY - offsetY) / safePixelSize;
 
 		const oldPixelSize = safePixelSize;
 
@@ -272,13 +299,9 @@
 			? Math.max(1, Number(computed.toFixed(8)))
 			: pixelSizeConstant;
 
-		// Adjust offsets to keep the world position under the mouse
-		// The change in offset is the difference in how far the world point moved
-		const deltaOffset = worldX * (pixelSize - oldPixelSize);
-		offsetX -= deltaOffset;
-
-		const deltaOffsetY = worldY * (pixelSize - oldPixelSize);
-		offsetY -= deltaOffsetY;
+		// Adjust offsets so the same world position stays under the mouse
+		offsetX = mouseX - worldX * pixelSize;
+		offsetY = mouseY - worldY * pixelSize;
 
 		console.log('New zoom:', zoom, 'pixelSize:', pixelSize);
 	}
@@ -372,10 +395,7 @@
 			on:mousemove={onMouseMove}
 			on:mouseup={onMouseUp}
 			on:wheel={onWheel}
-			style="image-rendering: pixelated;
-          	width: {width * safePixelSize}px;
-          	height: {height * safePixelSize}px;
-			transform: translate({offsetX}px, {offsetY}px);"
+			style="image-rendering: pixelated; width: 100%; height: 100%;"
 			class="canvas">
 		</canvas>
 
