@@ -48,7 +48,7 @@ export const POST: RequestHandler = async (event) => {
 	}
 
 	// Allow 5 placements per 10 seconds
-	if (!checkRateLimit(session.user.email, 10, 10000)) {
+	if (!checkRateLimit(session.user.email, 50, 10000)) {
 		return jsonError('Too many requests, slow down!', 429);
 	}
 
