@@ -13,6 +13,11 @@ export const GET: RequestHandler = async (event) => {
 	const slack_id = session.user.slack_id as string;
 	const name = session.user.name as string;
 
+	if (!email || !slack_id || !name) {
+		console.warn('Invalid User: ', session);
+		return new Response('Unauthorized or incomplete user', { status: 401 });
+	}
+
 	console.log('got request to check user');
 
 	const User = await getUserFromEmail(email);
@@ -23,7 +28,6 @@ export const GET: RequestHandler = async (event) => {
 	}
 
 	await addUser({ email, slack_id, name });
-	// admin level is just for now, i will update the db to have bools for canvas edit, ship edit, shop edit, supa-admin
 	console.log('added user');
 
 	return new Response(JSON.stringify({ message: 'added user' }));
