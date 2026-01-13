@@ -23,15 +23,15 @@ interface RequestBody {
 export const POST: RequestHandler = async (event: RequestEvent) => {
 	const session: Session = await event.locals.auth();
 
-	// Require login
-	if (!session || !session.user?.email) {
-		return jsonError('Unauthorized', 401);
-	}
+	// // Require login
+	// if (!session || !session.user?.email) {
+	// 	return jsonError('Unauthorized', 401);
+	// }
 
-	// Allow 50 placements per 10 seconds
-	if (!checkRateLimit(session.user.email, 50, 10000)) {
-		return jsonError('Too many requests, slow down!', 429);
-	}
+	// // Allow 50 placements per 10 seconds
+	// if (!checkRateLimit(session.user.email, 50, 10000)) {
+	// 	return jsonError('Too many requests, slow down!', 429);
+	// }
 
 	const { request } = event;
 	const body: RequestBody | undefined = await request.json();
@@ -41,4 +41,6 @@ export const POST: RequestHandler = async (event: RequestEvent) => {
 	if (!slack_id) {
 		return jsonError('Slack ID not found', 400);
 	}
+
+	givePixels(slack_id, number_to_add);
 };
