@@ -126,6 +126,27 @@ export async function numberOfPixels(slack_id: string, add_pixel: boolean = fals
 	return pixels_placed;
 }
 
+export async function givePixels(slack_id: string, number_to_add: number = 0) {
+	const records = await base('Users')
+		.select({
+			filterByFormula: `{slack_id} = '${slack_id.replace("'", "\\'")}'`,
+			maxRecords: 1
+		})
+		.firstPage();
+
+	if (records.length === 0) return null;
+
+	const record = records[0];
+	let pixels_placed = (record.fields.pixels_placed as number) || 0;
+
+	pixels_placed -= number_to_add;
+	await base('Users').update(record.id, {
+		pixels_placed: pixels_placed
+	});
+
+	return pixels_placed;
+}
+
 export async function getAllUsers() {
 	const records = await base('Users').select().all();
 
