@@ -77,7 +77,10 @@
 		</p>
 
 		<p>Project submission form coming soon!</p>
+	</div -->
+	<br />
+	<div class="para">
+		<p>WANT SOME MERCH???</p>
+		<a href="https://forms.hackclub.com/pxl"><button>Then fill out this form!</button></a>
 	</div>
-	 <a href="https://example.com/fillout"><button>Fillout this Form!</button></a> -->
-	<!-- <br /> <br /> -->
 </div>
