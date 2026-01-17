@@ -11,12 +11,6 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
 	}
 
 	const user = await getUserFromEmail(email);
-
-	// if (!user?.is_Beta_Tester) {
-	// 	// REMOVE AFTER BETA
-	// 	throw redirect(302, '/');
-	// }
-
 	const admin_viewer = user?.is_admin ?? false;
 
 	const res = await fetch('/api/users/check');

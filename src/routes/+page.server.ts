@@ -16,6 +16,5 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 	return {
 		signedIn,
-		isBetaTester // REMOVE AFTER BETA
 	};
 };

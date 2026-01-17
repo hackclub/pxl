@@ -2,7 +2,7 @@
 
 # pxl
 
-pxl is a open source r/place copy. It lets you place pixels on a canvas and change colors. It also updates all other peoples canvases live. Try it at [pxl.niiccoo2.xyz](https://pxl.niiccoo2.xyz)
+pxl is a open source r/place copy. It lets you place pixels on a canvas and change colors. It also updates all other peoples canvases live. Try it at [pxl.hackclub.com](https://pxl.hackclub.com)
 
 ### Color palate
 

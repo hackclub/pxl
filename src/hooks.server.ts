@@ -2,7 +2,6 @@ import { SvelteKitAuth } from '@auth/sveltekit';
 import type { User } from '@auth/core/types';
 import { AUTH_SECRET } from '$env/static/private';
 import { addUser, getUserFromEmail } from '$lib/server/db';
-//const allowedEmails: string[] = ['ben.elliott.2021@gmail.com', 'web@niiccoo2.xyz'];
 
 const HackClubProvider = {
 	id: 'hackclub',
