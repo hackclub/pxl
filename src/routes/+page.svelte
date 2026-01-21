@@ -43,8 +43,8 @@
 			pxl is a collaborative art experiment by Hack Club.
 			<br /> <br />
 			Every minute of hackatime during the month of January allows you to place one pixel on the canvas.
-			Double-dipping is allowed for just placing pixels, but if you want merch, you can't double dip
-			and need to submit your project to the form in the <a href="/shop">shop</a>.
+			Double-dipping is allowed for just placing pixels, but if you want merch, you can't double dip and
+			need to submit your project to the form in the <a href="/shop">shop</a>.
 		</p>
 	</div>
 
