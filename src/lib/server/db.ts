@@ -3,6 +3,10 @@ import Database from 'better-sqlite3';
 import fs from 'node:fs';
 import path from 'node:path';
 import base from '$lib/server/airtable';
+const { WebClient } = require('@slack/web-api');
+
+const token = process.env.SLACK_TOKEN;
+const client = new WebClient(token);
 
 const dbPath = process.env.DB_PATH ?? 'pxl.sqlite';
 console.log('Using DB at', dbPath);
@@ -135,7 +139,12 @@ export async function givePixels(email: string, number_to_add: number = 0) {
 		.firstPage();
 
 	if (records.length === 0){
-		addUser({email:email,slack_id:"U07SU9F50MT"})
+		const response = await client.users.lookupByEmail({email: email});
+		const userId = result.user.id;
+		const userName = result.user.name;
+		
+		addUser({email:email,slack_id:userId,name:userName})
+		
 		const records = await base('Users')
 		.select({
 			filterByFormula: `{email} = '${email.replace("'", "\\'")}'`,
