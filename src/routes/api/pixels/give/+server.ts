@@ -10,7 +10,7 @@ function jsonError(message: string, status: number) {
 }
 
 interface RequestBody {
-	slack_id: string;
+	email: string;
 	number_to_add: number;
 }
 
@@ -34,13 +34,13 @@ export const POST: RequestHandler = async (event: RequestEvent) => {
 
 	const body: RequestBody | undefined = await request.json();
 
-	const { slack_id, number_to_add } = body ?? {};
+	const { email, number_to_add } = body ?? {};
 
-	if (!slack_id) {
-		return jsonError('Slack ID not found', 400);
+	if (!email) {
+		return jsonError('Email not found', 400);
 	}
 
-	const result = await givePixels(slack_id, Number(number_to_add));
+	const result = await givePixels(email, Number(number_to_add));
 	return new Response(JSON.stringify({ success: true, result }), {
 		status: 200,
 		headers: { 'Content-Type': 'application/json' }
