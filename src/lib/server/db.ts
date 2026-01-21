@@ -89,7 +89,7 @@ export async function addUser(user: { email: string; slack_id: string; name?: st
 export async function getUserFromEmail(email: string) {
 	const records = await base('Users')
 		.select({
-			filterByFormula: `{email} = '${email.replace("'", "\\'")}'`,
+			filterByFormula: `{email} = '${email.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
 			maxRecords: 1
 		})
 		.firstPage();
@@ -110,7 +110,7 @@ export async function getUserFromEmail(email: string) {
 export async function numberOfPixels(slack_id: string, add_pixel: boolean = false) {
 	const records = await base('Users')
 		.select({
-			filterByFormula: `{slack_id} = '${slack_id.replace("'", "\\'")}'`,
+			filterByFormula: `{slack_id} = '${slack_id.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
 			maxRecords: 1
 		})
 		.firstPage();
@@ -133,7 +133,7 @@ export async function numberOfPixels(slack_id: string, add_pixel: boolean = fals
 export async function givePixels(email: string, number_to_add: number = 0) {
 	let records = await base('Users')
 		.select({
-			filterByFormula: `{email} = '${email.replace("'", "\\'")}'`,
+			filterByFormula: `{email} = '${email.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
 			maxRecords: 1
 		})
 		.firstPage();
@@ -153,7 +153,7 @@ export async function givePixels(email: string, number_to_add: number = 0) {
 
 			records = await base('Users')
 				.select({
-					filterByFormula: `{email} = '${email.replace("'", "\\'")}'`,
+					filterByFormula: `{email} = '${email.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
 					maxRecords: 1
 				})
 				.firstPage();
