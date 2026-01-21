@@ -3,7 +3,7 @@ import Database from 'better-sqlite3';
 import fs from 'node:fs';
 import path from 'node:path';
 import base from '$lib/server/airtable';
-const { WebClient } = require('@slack/web-api');
+import { WebClient } from '@slack/web-api';
 
 const token = process.env.SLACK_TOKEN;
 const client = new WebClient(token);
@@ -89,7 +89,7 @@ export async function addUser(user: { email: string; slack_id: string; name?: st
 export async function getUserFromEmail(email: string) {
 	const records = await base('Users')
 		.select({
-			filterByFormula: `{email} = '${email.replace("'", "\\'")}'`,
+			filterByFormula: `{email} = '${email.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
 			maxRecords: 1
 		})
 		.firstPage();
@@ -110,7 +110,7 @@ export async function getUserFromEmail(email: string) {
 export async function numberOfPixels(slack_id: string, add_pixel: boolean = false) {
 	const records = await base('Users')
 		.select({
-			filterByFormula: `{slack_id} = '${slack_id.replace("'", "\\'")}'`,
+			filterByFormula: `{slack_id} = '${slack_id.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
 			maxRecords: 1
 		})
 		.firstPage();
@@ -131,26 +131,36 @@ export async function numberOfPixels(slack_id: string, add_pixel: boolean = fals
 }
 
 export async function givePixels(email: string, number_to_add: number = 0) {
-	const records = await base('Users')
+	let records = await base('Users')
 		.select({
-			filterByFormula: `{email} = '${email.replace("'", "\\'")}'`,
+			filterByFormula: `{email} = '${email.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
 			maxRecords: 1
 		})
 		.firstPage();
 
-	if (records.length === 0){
-		const response = await client.users.lookupByEmail({email: email});
-		const userId = result.user.id;
-		const userName = result.user.name;
-		
-		addUser({email:email,slack_id:userId,name:userName})
-		
-		const records = await base('Users')
-		.select({
-			filterByFormula: `{email} = '${email.replace("'", "\\'")}'`,
-			maxRecords: 1
-		})
-		.firstPage();
+	if (records.length === 0) {
+		try {
+			const response = await client.users.lookupByEmail({ email: email });
+			
+			if (!response.user) {
+				throw new Error(`User with email ${email} not found in Slack`);
+			}
+			
+			const userId = response.user.id as string;
+			const userName = (response.user.name || response.user.real_name || email) as string;
+
+			await addUser({ email: email, slack_id: userId, name: userName });
+
+			records = await base('Users')
+				.select({
+					filterByFormula: `{email} = '${email.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
+					maxRecords: 1
+				})
+				.firstPage();
+		} catch (error) {
+			console.error('Failed to lookup user by email:', error);
+			throw new Error(`User with email ${email} not found in database or Slack`);
+		}
 	}
 	const record = records[0];
 	let pixels_placed = (record.fields.pixels_placed as number) || 0;
