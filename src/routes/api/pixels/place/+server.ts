@@ -126,7 +126,7 @@ export const POST: RequestHandler = async (event) => {
 			x,
 			y,
 			color,
-			placed_by
+			placed_by: slack_id
 		});
 
 		log_pxl('Placed pixel', x, y, color, session.user.email);
