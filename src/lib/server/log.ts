@@ -1,7 +1,14 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { resolve } from 'path';
+import { resolve, dirname } from 'path';
 
 const LOG_FILE = resolve(process.cwd(), 'data/action-log.json');
+
+import { mkdirSync } from 'fs';
+
+function ensureLogDir() {
+	const dir = dirname(LOG_FILE);
+	if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+}
 
 function readLog(): any[] {
 	if (!existsSync(LOG_FILE)) return [];
@@ -22,6 +29,7 @@ export function log_action(action: string, email: string) {
 		email,
 		action
 	});
+	ensureLogDir();
 	writeFileSync(LOG_FILE, JSON.stringify(logs, null, 2), 'utf-8');
 }
 
@@ -35,5 +43,6 @@ export function log_pxl(action: string, x: number, y: number, color: string, ema
 		y,
 		color
 	});
+	ensureLogDir();
 	writeFileSync(LOG_FILE, JSON.stringify(logs, null, 2), 'utf-8');
 }
