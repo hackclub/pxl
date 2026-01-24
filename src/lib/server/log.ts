@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 
-const LOG_FILE = resolve(process.cwd(), 'action-log.json');
+const LOG_FILE = resolve(process.cwd(), 'data/action-log.json');
 
 function readLog(): any[] {
 	if (!existsSync(LOG_FILE)) return [];
