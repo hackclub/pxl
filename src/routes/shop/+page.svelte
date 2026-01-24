@@ -43,17 +43,13 @@
 
 <div class="page-content">
 	<br />
-	<div class="para">
-		<h1>Coming Soon!</h1>
-		<p>
-			The shop will be open soon! Feel free to start working on projects (they can be anything!) to
-			get some merch. Prices will be annonced later, and the items will have the final canvas on
-			them. You can get more than one item from one project assuming you have enough hours for all
-			the items combined.
 
-			<!-- Some of this amazing merch, code a project for the number of hours
-			required for the piece of merch you want. You can get more than one item from one project
-			assuming you have enough hours for all the items combined. -->
+	<div class="para">
+		<h1>Shop</h1>
+		<p>
+			Work on projects (they can be anything!) to get some merch. The items will have the final
+			canvas on them. You can get more than one item from one project assuming you have enough hours
+			for all the items combined.
 		</p>
 	</div>
 
@@ -66,7 +62,7 @@
 				image={product.image} />
 		{/each}
 	</div>
-	<!--
+
 	<br />
 	<div class="para">
 		<p>Like what you see?</p>
@@ -76,8 +72,7 @@
 			enough hours for all the items combined.
 		</p>
 
-		<p>Project submission form coming soon!</p>
+		<a href="https://forms.hackclub.com/pxl" target="_blank"
+			><button>Fill out this Form!</button></a>
 	</div>
-	 <a href="https://example.com/fillout"><button>Fillout this Form!</button></a> -->
-	<!-- <br /> <br /> -->
 </div>
