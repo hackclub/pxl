@@ -1,7 +1,7 @@
 // @ts-ignore: no type declarations for better-sqlite3
 import Database from 'better-sqlite3';
 import fs from 'node:fs';
-import path from 'node:path';
+import path, { toNamespacedPath } from 'node:path';
 import base from '$lib/server/airtable';
 import { WebClient } from '@slack/web-api';
 
@@ -89,7 +89,7 @@ export async function addUser(user: { email: string; slack_id: string; name?: st
 export async function getUserFromEmail(email: string) {
 	const records = await base('Users')
 		.select({
-			filterByFormula: `{email} = '${email.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
+			filterByFormula: `{email} = '${email.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`,
 			maxRecords: 1
 		})
 		.firstPage();
@@ -110,7 +110,7 @@ export async function getUserFromEmail(email: string) {
 export async function numberOfPixels(slack_id: string, add_pixel: boolean = false) {
 	const records = await base('Users')
 		.select({
-			filterByFormula: `{slack_id} = '${slack_id.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
+			filterByFormula: `{slack_id} = '${slack_id.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`,
 			maxRecords: 1
 		})
 		.firstPage();
@@ -133,7 +133,7 @@ export async function numberOfPixels(slack_id: string, add_pixel: boolean = fals
 export async function givePixels(email: string, number_to_add: number = 0) {
 	let records = await base('Users')
 		.select({
-			filterByFormula: `{email} = '${email.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
+			filterByFormula: `{email} = '${email.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`,
 			maxRecords: 1
 		})
 		.firstPage();
@@ -141,11 +141,11 @@ export async function givePixels(email: string, number_to_add: number = 0) {
 	if (records.length === 0) {
 		try {
 			const response = await client.users.lookupByEmail({ email: email });
-			
+
 			if (!response.user) {
 				throw new Error(`User with email ${email} not found in Slack`);
 			}
-			
+
 			const userId = response.user.id as string;
 			const userName = (response.user.name || response.user.real_name || email) as string;
 
@@ -153,7 +153,7 @@ export async function givePixels(email: string, number_to_add: number = 0) {
 
 			records = await base('Users')
 				.select({
-					filterByFormula: `{email} = '${email.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`,
+					filterByFormula: `{email} = '${email.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`,
 					maxRecords: 1
 				})
 				.firstPage();
@@ -186,4 +186,16 @@ export async function getAllUsers() {
 			...mapPermissions(permissions)
 		};
 	});
+}
+
+export async function addLogEntry(logEntry: {
+	Date: string;
+	Email: string;
+	Action: string;
+	X: number;
+	Y: number;
+	Color: string;
+}) {
+	const record = await base('Log').create(logEntry);
+	return { id: record.id, ...record.fields };
 }

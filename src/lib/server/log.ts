@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { addLogEntry } from '$lib/server/db';
 import { resolve, dirname } from 'path';
 
 const LOG_FILE = resolve(process.cwd(), 'data/action-log.json');
@@ -33,7 +34,7 @@ export function log_action(action: string, email: string) {
 	writeFileSync(LOG_FILE, JSON.stringify(logs, null, 2), 'utf-8');
 }
 
-export function log_pxl(action: string, x: number, y: number, color: string, email: string) {
+export async function log_pxl(action: string, x: number, y: number, color: string, email: string) {
 	const logs = readLog();
 	logs.push({
 		time: new Date().toISOString(),
@@ -45,4 +46,17 @@ export function log_pxl(action: string, x: number, y: number, color: string, ema
 	});
 	ensureLogDir();
 	writeFileSync(LOG_FILE, JSON.stringify(logs, null, 2), 'utf-8');
+
+	try {
+		await addLogEntry({
+			Date: new Date().toISOString(),
+			Email: email,
+			Action: action,
+			X: x,
+			Y: y,
+			Color: color
+		});
+	} catch (err) {
+		console.error('Logging to Airtable Failed: ', err);
+	}
 }
