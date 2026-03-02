@@ -52,6 +52,15 @@ export const POST: RequestHandler = async (event) => {
 		return jsonError('Too many requests, slow down!', 429);
 	}
 
+	// Check if past end date
+	const end_date = new Date('2026-03-01T23:59:59-05:00'); // March 1, 11:59:59 PM EST
+	if (Date.now() > end_date.getTime()) {
+		return new Response(JSON.stringify({ ok: true, message: 'event ended!' }), {
+			status: 200,
+			headers: { 'Content-Type': 'application/json' }
+		});
+	}
+
 	const user = await getUserFromEmail(session.user?.email);
 	const isAdmin = user?.is_admin ?? false;
 

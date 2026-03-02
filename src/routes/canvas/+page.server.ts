@@ -26,6 +26,11 @@ async function getTotalTime(slackID: string) {
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth();
 
+	const end_date = new Date('2026-03-01T23:59:59-05:00'); // March 1, 11:59:59 PM EST
+	if (Date.now() > end_date.getTime()) {
+		redirect(302, '/canvas/end');
+	}
+
 	// const allowed_emails = ["ben.elliott.2021@gmail.com","web@niiccoo2.xyz"];
 	const email = session?.user?.email ?? null;
 	const slackID = session?.user?.slack_id ?? null;
