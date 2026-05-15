@@ -23,7 +23,7 @@
 		"@vitejs/plugin-basic-ssl": "^2.1.0",
 		"prettier": "^3.7.4",
 		"prettier-plugin-svelte": "^3.3.3",
-		"svelte": "^5.0.0",
+		"svelte": "^5.55.7",
 		"svelte-check": "^4.0.0",
 		"typescript": "^5.0.0",
 		"vite": "^7.2.2"
