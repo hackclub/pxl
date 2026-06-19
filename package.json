@@ -34,6 +34,6 @@
 		"@slack/web-api": "^7.13.0",
 		"airtable": "^0.12.2",
 		"better-sqlite3": "^12.4.1",
-		"nodemailer": "^7.0.10"
+		"nodemailer": "^9.0.1"
 	}
 }
